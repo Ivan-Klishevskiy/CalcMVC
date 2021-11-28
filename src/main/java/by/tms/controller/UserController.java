@@ -24,12 +24,12 @@ public class UserController {
     }
 
     @PostMapping("/req")
-    public String registration(String name, String username, String password ){
+    public String registration(String name, String username, String password, Model model){
         System.out.println(name+" "+username+" "+password);
         if(userService.save(name, username, password)){
             return "redirect:/user/auth";
         }else {
-            //model.addAttribute("message","The user is already registered!");
+            model.addAttribute("message","The user is already registered!");
             return "req";
         }
     }
