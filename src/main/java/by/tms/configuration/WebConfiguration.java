@@ -9,7 +9,9 @@ import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Configuration
 @ComponentScan("by.tms")
@@ -25,5 +27,10 @@ public class WebConfiguration {
     @Bean
     public List<User> listUser(){
         return new ArrayList<>();
+    }
+
+    @Bean
+    public Map<String,List<String>> historyList(){
+        return new HashMap<>();
     }
 }

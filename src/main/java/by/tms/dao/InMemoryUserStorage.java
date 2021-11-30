@@ -20,20 +20,20 @@ public class InMemoryUserStorage {
         userList.add(user);
     }
 
-    public User findByUsername(String username){
+    public User findByUsername(String username) {
         for (User user : userList) {
-            if(user.getUsername().equals(username)){
+            if (user.getUsername() != null && user.getUsername().equals(username)) {
                 return user;
             }
         }
         return null;
     }
 
-    public List<User>findAll(){
+    public List<User> findAll() {
         return userList;
     }
 
-    public void deleteUser(User user){
+    public void deleteUser(User user) {
         userList.remove(user);
     }
 }

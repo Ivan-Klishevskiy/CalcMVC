@@ -5,14 +5,21 @@
   Time: 14:18
   To change this template use File | Settings | File Templates.
 --%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
     <title>Home</title>
 </head>
 <body>
-<p>Hello ${sessionScope.user}</p>
-<a href="/user/reg">Registration</a><br>
-<a href="/user/auth">Authorization</a><br>
+<p>Hello ${sessionScope.user.username}!</p>
+<c:if test="${sessionScope.user.username==null}">
+    <a href="/user/reg">Registration</a><br>
+    <a href="/user/auth">Authorization</a><br>
+</c:if>
+<c:if test="${sessionScope.user.username!=null}">
+    <a href="/user/logout">Logout</a><br>
+    <a href="/calc/simple">Simple calculator</a><br>
+</c:if>
 </body>
 </html>

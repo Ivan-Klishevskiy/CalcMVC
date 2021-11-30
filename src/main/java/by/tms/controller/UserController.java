@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.servlet.http.HttpSession;
+
 @Controller
 @RequestMapping("/user")
 public class UserController {
@@ -23,10 +25,9 @@ public class UserController {
         return "reg";
     }
 
-    @PostMapping("/req")
-    public String registration(String name, String username, String password, Model model){
-        System.out.println(name+" "+username+" "+password);
-        if(userService.save(name, username, password)){
+    @PostMapping("/reg")
+    public String registration(User user,Model model){
+        if(userService.save(user)){
             return "redirect:/user/auth";
         }else {
             model.addAttribute("message","The user is already registered!");
@@ -40,8 +41,24 @@ public class UserController {
     }
 
     @PostMapping("/auth")
-    public String authorization(String username, String password){
-        System.out.println(username+" "+password);
+    public String authorization(String username, String password, Model model, HttpSession httpSession){
+        if(userService.findByUsername(username)!=null){
+            if (userService.findByUsername(username).getPassword().equals(password)) {
+                httpSession.setAttribute("user", userService.findByUsername(username));
+                return "redirect:/";
+            }else {
+                model.addAttribute("message", "Wrong password!");
+                return "auth";
+            }
+        }else {
+            model.addAttribute("message", "User not found!");
+            return "auth";
+        }
+    }
+
+    @GetMapping("/logout")
+    public String logout(HttpSession httpSession) {
+        httpSession.invalidate();
         return "redirect:/";
     }
 }

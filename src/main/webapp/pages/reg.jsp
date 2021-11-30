@@ -12,11 +12,11 @@
 </head>
 <body>
 <form action="/user/reg" method="post">
-    <input type="text" name="name" placeholder="Name">
-    <input type="text" name="username" placeholder="Username">
-    <input type="password" name="password" placeholder="Password">
+    <input type="text" name="name" placeholder="Name" required>
+    <input type="text" name="username" placeholder="Username" required>
+    <input type="password" name="password" placeholder="Password" required>
     <button>Submit</button>
 </form>
-
+<p>${message}</p>
 </body>
 </html>
