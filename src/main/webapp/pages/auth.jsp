@@ -1,3 +1,4 @@
+<%@ taglib prefix="s" uri="http://www.springframework.org/tags/form" %>
 <%--
   Created by IntelliJ IDEA.
   User: Kliis
@@ -11,11 +12,19 @@
     <title>Authorization</title>
 </head>
 <body>
-<form action="/user/auth" method="post">
-    <input type="text" name="username" placeholder="Username" required>
-    <input type="password" name="password" placeholder="Password" required>
-    <button>Submit</button>
-</form>
+
+<s:form action="/user/auth" method="post" modelAttribute="authUser">
+    <s:input path="username" placeholder="Username"/>
+    <br>
+    <s:errors path="username"/>
+    <br>
+    <s:input path="password" placeholder="Password"/>
+    <br>
+    <s:errors path="password"/>
+    <br>
+    <s:button>Submit</s:button>
+</s:form>
+
 <p>${message}</p>
 </body>
 </html>

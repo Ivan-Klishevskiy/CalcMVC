@@ -19,7 +19,7 @@
 </c:if>
 <c:if test="${sessionScope.user.username!=null}">
     <a href="/user/logout">Logout</a><br>
-    <a href="/calc/simple">Simple calculator</a><br>
+    <a href="/calc">Simple calculator</a><br>
 </c:if>
 </body>
 </html>

@@ -1,14 +1,19 @@
 package by.tms.controller;
 
+import by.tms.dto.AuthorizationUserDto;
+import by.tms.dto.RegistrationUserDto;
 import by.tms.entity.User;
 import by.tms.service.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 
 @Controller
 @RequestMapping("/user")
@@ -21,36 +26,44 @@ public class UserController {
 
 
     @GetMapping("/reg")
-    public String registration(){
+    public String registration(Model model) {
+        model.addAttribute("regUser", new RegistrationUserDto());
         return "reg";
     }
 
     @PostMapping("/reg")
-    public String registration(User user,Model model){
-        if(userService.save(user)){
+    public String registration(@ModelAttribute("regUser") @Valid RegistrationUserDto registrationUserDto, BindingResult bindingResult, Model model) {
+        if (bindingResult.hasErrors()) {
+            return "reg";
+        }
+        if (userService.save(registrationUserDto.getName(), registrationUserDto.getUsername(), registrationUserDto.getPassword())) {
             return "redirect:/user/auth";
-        }else {
-            model.addAttribute("message","The user is already registered!");
-            return "req";
+        } else {
+            model.addAttribute("message", "The user is already registered!");
+            return "reg";
         }
     }
 
     @GetMapping("/auth")
-    public String authorization(){
+    public String authorization(Model model) {
+        model.addAttribute("authUser", new RegistrationUserDto());
         return "auth";
     }
 
     @PostMapping("/auth")
-    public String authorization(String username, String password, Model model, HttpSession httpSession){
-        if(userService.findByUsername(username)!=null){
-            if (userService.findByUsername(username).getPassword().equals(password)) {
-                httpSession.setAttribute("user", userService.findByUsername(username));
+    public String authorization(@ModelAttribute("authUser") @Valid AuthorizationUserDto authUserDto, BindingResult bindingResult, Model model, HttpSession httpSession) {
+        if (bindingResult.hasErrors()) {
+            return "reg";
+        }
+        if (userService.findByUsername(authUserDto.getUsername()) != null) {
+            if (userService.findByUsername(authUserDto.getUsername()).getPassword().equals(authUserDto.getPassword())) {
+                httpSession.setAttribute("user", userService.findByUsername(authUserDto.getUsername()));
                 return "redirect:/";
-            }else {
+            } else {
                 model.addAttribute("message", "Wrong password!");
                 return "auth";
             }
-        }else {
+        } else {
             model.addAttribute("message", "User not found!");
             return "auth";
         }

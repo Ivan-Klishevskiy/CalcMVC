@@ -1,14 +1,18 @@
 package by.tms.controller;
 
+import by.tms.dto.CalculatorDto;
 import by.tms.service.CalcService;
 import by.tms.service.OperationService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 
 @Controller
 @RequestMapping("/calc")
@@ -21,17 +25,21 @@ public class CalcController {
         this.operationService = operationService;
     }
 
-    @GetMapping("/simple")
-    public String simple() {
+    @GetMapping
+    public String calculator(Model model) {
+        model.addAttribute("calcModel",new CalculatorDto());
         return "simpleCalc";
     }
 
-    @PostMapping("/simple")
-    public String simple(float first, String sign, float second, Model model, HttpSession httpSession) {
-        model.addAttribute("first",first);
-        model.addAttribute("second",second);
-        model.addAttribute("result",calcService.calculate((String) httpSession.getAttribute("user"),first,second,sign));
-        model.addAttribute("history",operationService.getAllHistory((String) httpSession.getAttribute("user")));
+    @PostMapping
+    public String simple(@ModelAttribute("calcModel") @Valid CalculatorDto calculatorDto, BindingResult bindingResult, Model model, HttpSession httpSession) {
+        if (bindingResult.hasErrors()) {
+            return "simpleCalc";
+        }
+        calculatorDto.setResult(calcService.calculate((String) httpSession.getAttribute("user"),
+                calculatorDto.getFirst(), calculatorDto.getSecond(), calculatorDto.getSign()));
+        model.addAttribute("calcModel",calculatorDto);
+        model.addAttribute("history", operationService.getAllHistory((String) httpSession.getAttribute("user")));
         return "simpleCalc";
     }
 }
