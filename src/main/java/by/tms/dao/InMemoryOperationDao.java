@@ -7,13 +7,14 @@ import java.util.List;
 import java.util.Map;
 
 @Component
-public class InMemoryOperationStorage {
+public class InMemoryOperationDao implements OperationDao{
     private final Map<String, List<String>> historyList;
 
-    public InMemoryOperationStorage(Map<String, List<String>> historyList) {
+    public InMemoryOperationDao(Map<String, List<String>> historyList) {
         this.historyList = historyList;
     }
 
+    @Override
     public void addOperation(String k, String operation){
         List<String> temp = historyList.get(k);
         if(temp==null){
@@ -25,10 +26,12 @@ public class InMemoryOperationStorage {
         }
     }
 
+    @Override
     public List<String>getAllHistory(String k){
         return historyList.get(k);
     }
 
+    @Override
     public void deleteHistory(String k){
         historyList.remove(k);
     }

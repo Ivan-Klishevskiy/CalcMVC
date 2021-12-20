@@ -1,7 +1,9 @@
 package by.tms.service;
 
-import by.tms.dao.InMemoryUserStorage;
+import by.tms.dao.HibernateUserDao;
+import by.tms.dao.InMemoryUserDao;
 import by.tms.entity.User;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -9,20 +11,27 @@ import java.util.List;
 @Component
 public class UserService {
 
-    private final InMemoryUserStorage userStorage;
+    @Autowired
+    private InMemoryUserDao userStorage;
 
-    public UserService(InMemoryUserStorage userStorage) {
-        this.userStorage = userStorage;
-    }
+    @Autowired
+    private HibernateUserDao hibernateUserDao;
+
 
     public boolean save(String name, String username, String password) {
-        User user= new User(name,username,password);
-        if(userStorage.findByUsername(user.getUsername())==null){
-            userStorage.save(user);
-            return true;
-        }else {
-            return false;
-        }
+        User user= new User();
+        user.setName(name);
+        user.setPassword(password);
+        user.setUsername(username);
+//        if(userStorage.findByUsername(user.getUsername())==null){
+//            userStorage.save(user);
+//            hibernateUserDao.save(user);
+//            return true;
+//        }else {
+//            return false;
+//        }
+        hibernateUserDao.save(user);
+        return true;
     }
 
     public boolean save(User user) {

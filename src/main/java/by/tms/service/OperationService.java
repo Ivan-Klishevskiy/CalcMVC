@@ -1,15 +1,15 @@
 package by.tms.service;
 
-import by.tms.dao.InMemoryOperationStorage;
+import by.tms.dao.InMemoryOperationDao;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 @Component
 public class OperationService {
-    private final InMemoryOperationStorage operationStorage;
+    private final InMemoryOperationDao operationStorage;
 
-    public OperationService(InMemoryOperationStorage operationStorage) {
+    public OperationService(InMemoryOperationDao operationStorage) {
         this.operationStorage = operationStorage;
     }
 

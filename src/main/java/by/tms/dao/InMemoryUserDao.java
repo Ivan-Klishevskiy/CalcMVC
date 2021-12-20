@@ -8,18 +8,20 @@ import java.util.List;
 
 
 @Component
-public class InMemoryUserStorage {
+public class InMemoryUserDao implements UserDao{
 
     private List<User> userList;
 
-    public InMemoryUserStorage(List<User> userList) {
+    public InMemoryUserDao(List<User> userList) {
         this.userList = userList;
     }
 
+    @Override
     public void save(User user) {
         userList.add(user);
     }
 
+    @Override
     public User findByUsername(String username) {
         for (User user : userList) {
             if (user.getUsername() != null && user.getUsername().equals(username)) {
@@ -29,10 +31,12 @@ public class InMemoryUserStorage {
         return null;
     }
 
+    @Override
     public List<User> findAll() {
         return userList;
     }
 
+    @Override
     public void deleteUser(User user) {
         userList.remove(user);
     }
