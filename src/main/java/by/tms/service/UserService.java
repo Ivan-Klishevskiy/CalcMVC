@@ -5,10 +5,12 @@ import by.tms.dao.InMemoryUserDao;
 import by.tms.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Component
+@Transactional
 public class UserService {
 
     @Autowired
@@ -23,20 +25,9 @@ public class UserService {
         user.setName(name);
         user.setPassword(password);
         user.setUsername(username);
-//        if(userStorage.findByUsername(user.getUsername())==null){
-//            userStorage.save(user);
-//            hibernateUserDao.save(user);
-//            return true;
-//        }else {
-//            return false;
-//        }
-        hibernateUserDao.save(user);
-        return true;
-    }
-
-    public boolean save(User user) {
-        if(userStorage.findByUsername(user.getUsername())==null){
-            userStorage.save(user);
+        hibernateUserDao.findByUsername(user.getUsername());
+        if(hibernateUserDao.findByUsername(user.getUsername()) ==null){
+            hibernateUserDao.save(user);
             return true;
         }else {
             return false;

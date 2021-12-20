@@ -1,16 +1,17 @@
 package by.tms.dao;
 
 import by.tms.entity.User;
+import org.hibernate.query.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
+
+import javax.persistence.NoResultException;
 import java.util.List;
 
 @Repository
-@Transactional(noRollbackFor = RuntimeException.class)
 public class HibernateUserDao implements UserDao{
 
     @Autowired
@@ -25,16 +26,40 @@ public class HibernateUserDao implements UserDao{
 
     @Override
     public User findByUsername(String username) {
-        return null;
+        Session session = sessionFactory.openSession();
+        Query<User> query = session.createQuery("from User where username = :username", User.class);
+        try {
+            query.setParameter("username", username);
+            User res = query.getSingleResult();
+            session.close();
+            return res;
+        }catch (NoResultException ignored){
+            return null;
+        }
     }
 
     @Override
     public List<User> findAll() {
-        return null;
+        Session session = sessionFactory.openSession();
+        Query<User> query = session.createQuery("from User", User.class);
+        try {
+            return query.getResultList();
+        }catch (NoResultException ignored) {
+            return null;
+        }
     }
 
     @Override
     public void deleteUser(User user) {
+        Session session = sessionFactory.openSession();
+        session.delete(user);
+        session.close();
+    }
 
+
+    public void update(User user) {
+        Session session = sessionFactory.openSession();
+        session.update(user);
+        session.close();
     }
 }
