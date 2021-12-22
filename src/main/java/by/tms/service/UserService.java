@@ -14,9 +14,6 @@ import java.util.List;
 public class UserService {
 
     @Autowired
-    private InMemoryUserDao userStorage;
-
-    @Autowired
     private HibernateUserDao hibernateUserDao;
 
 
@@ -25,7 +22,6 @@ public class UserService {
         user.setName(name);
         user.setPassword(password);
         user.setUsername(username);
-        hibernateUserDao.findByUsername(user.getUsername());
         if(hibernateUserDao.findByUsername(user.getUsername()) ==null){
             hibernateUserDao.save(user);
             return true;
@@ -35,14 +31,14 @@ public class UserService {
     }
 
     public User findByUsername(String username){
-        return userStorage.findByUsername(username);
+        return hibernateUserDao.findByUsername(username);
     }
 
     private List<User> findAll(){
-        return userStorage.findAll();
+        return hibernateUserDao.findAll();
     }
 
     public void deleteUser(User user){
-        userStorage.deleteUser(user);
+        hibernateUserDao.deleteUser(user);
     }
 }

@@ -39,6 +39,7 @@ public class CalcController {
         calculatorDto.setResult(calcService.calculate((String) httpSession.getAttribute("user"),
                 calculatorDto.getFirst(), calculatorDto.getSecond(), calculatorDto.getSign()));
         model.addAttribute("calcModel",calculatorDto);
+        model.addAttribute("resultValue",calculatorDto.getResult());
         model.addAttribute("history", operationService.getAllHistory((String) httpSession.getAttribute("user")));
         return "simpleCalc";
     }

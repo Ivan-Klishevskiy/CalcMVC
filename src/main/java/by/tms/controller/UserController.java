@@ -55,9 +55,10 @@ public class UserController {
         if (bindingResult.hasErrors()) {
             return "reg";
         }
-        if (userService.findByUsername(authUserDto.getUsername()) != null) {
-            if (userService.findByUsername(authUserDto.getUsername()).getPassword().equals(authUserDto.getPassword())) {
-                httpSession.setAttribute("user", userService.findByUsername(authUserDto.getUsername()));
+        User byUsername = userService.findByUsername(authUserDto.getUsername());
+        if (byUsername != null) {
+            if (byUsername.getPassword().equals(authUserDto.getPassword())) {
+                httpSession.setAttribute("user", byUsername.getUsername());
                 return "redirect:/";
             } else {
                 model.addAttribute("message", "Wrong password!");
